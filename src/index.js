@@ -66,7 +66,7 @@ async function startBot(firstTime = false, relaunchBrowser = false) {
             const homeUrl = `https://www.vfsglobal.ca/IRCC-AppointmentWave1/`;
             const userAgent = new userAgenet();
             mainUserAgent = userAgent.toString();
-            const args = [`--window-size=1920,1080`, `--user-agent=${mainUserAgent}`,`--no-sandbox`];
+            const args = [`--window-size=1920,1080`, `--user-agent=${mainUserAgent}`,`--no-sandbox`,`--disable-setuid-sandbox`];
             if (proxyGeonode.enabled) {
                 args.push(`--proxy-server=${proxyGeonode.proxy}`)
             }
