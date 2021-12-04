@@ -9,7 +9,10 @@ const antiCaptcha = require('./captcha');
 const crawl = require('./config').crawl;
 
 
+
 let page;
+
+
 
 const userAgenet = require('user-agents');
 
@@ -53,22 +56,23 @@ let buttonRefreshCalanderClick = 0;
 
 async function main(firstTime = false, relaunchBrowser = false) {
     if (firstTime) {
-        startBot(firstTime);
+        startBot(firstTime,false);
     }
     else {
-        startBot();
+        startBot(false,false);
     }
 };
 
-async function startBot(firstTime = false, relaunchBrowser = false) {
+async function startBot(firstTime = false, relaunchBrowser = false,proxy) {
     if (new Date().getTime() < new Date('2021-12-28 20:28:00').getTime()) {
         if (firstTime || relaunchBrowser) {
             const homeUrl = `https://www.vfsglobal.ca/IRCC-AppointmentWave1/`;
             const userAgent = new userAgenet();
             mainUserAgent = userAgent.toString();
-            const args = [`--window-size=1920,1080`, `--user-agent=${mainUserAgent}`,`--no-sandbox`,`--disable-setuid-sandbox`];
-            if (proxyGeonode.enabled) {
-                args.push(`--proxy-server=${proxyGeonode.proxy}`)
+            const args = [`--window-size=1920,1080`, `--user-agent=${mainUserAgent}`,`--no-sandbox`];
+            if (proxy && proxy.url) {
+                console.log(proxy.url)
+                args.push(`--proxy-server=${proxy.url}`)
             }
             browser = await puppeteer.launch(
                 {
@@ -167,6 +171,10 @@ async function handleScript(browser, page, faledLogin = 0, handleProccess) {
                                 await handleScript(browser, page, 0, currentProccess);
                             }
                         }
+                        else if (buttonRefreshCalanderClick >= 5){
+                            console.log('exit');
+                            process.exit(1);
+                        }
                         else {
                             console.log('not here calander', buttonRefreshCalanderClick, confirmAttempts);
                             if (totalDaysFound != 0){
@@ -174,7 +182,7 @@ async function handleScript(browser, page, faledLogin = 0, handleProccess) {
                             }
                             var uncompletedResponse = await getUncompletedUnappoitment(browser, page, refs[index], handleProccess);
                             console.log('uncompleted response', uncompletedResponse);
-                            if (uncompletedResponse && confirmAttempts < 3) {
+                            if (uncompletedResponse && confirmAttempts < 100) {
                                 const greenSlotPromise = await getGreenSlot(browser, page, refs[index], 0, '', handleProccess);
                                 console.log('greenSlotPromise', greenSlotPromise);
                                 if (greenSlotPromise) {
@@ -744,12 +752,14 @@ async function checkBlocked(handleProccess, browser, page, from, execMain = true
         const title = await getPageTitle(page);
         console.log('title',title);
         if (title == 'VFS : Exception Found') {
+            console.log('exit');
             process.exit(1);
         }
         else if (title.includes('ERROR: The request could not be satisfied')) {
             process.exit();
         }
         else if (title == '') {
+            console.log('exit');
             process.exit(1);
         }
         else {
@@ -771,7 +781,8 @@ async function checkBlocked(handleProccess, browser, page, from, execMain = true
                 })
                 .catch(async err => {
                     console.log('BLOCKED 1 HOUR');
-                    process.exit();
+                    console.log('exit');
+                    process.exit(1);
                 });
         }
     })
@@ -833,6 +844,8 @@ function buildTotalAttempts() {
 function randomIntFromInterval(min, max) { // min and max included 
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
+
+
 buildTotalAttempts();
 
 

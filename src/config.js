@@ -50,7 +50,7 @@ module.exports = {
         pageBlocked: 15000,
         timeBetweenZones:2000,
         refreshCalenderError:1000,
-        refreshCalender:10000,
+        refreshCalender:30000,
     },
 
     // Zones are defined by ref,zone and enabled
@@ -64,7 +64,7 @@ module.exports = {
     },
     zones: [
         {
-            ref: 'DELA1265258767438',
+            ref: 'JALC1269607718983',
             zone: 'jalndhar',
             enabled:true,
             order: 2

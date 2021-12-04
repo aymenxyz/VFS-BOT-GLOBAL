@@ -2,7 +2,7 @@
   "name": "automation",
   "version": "1.0.0",
   "description": "Web automation for the website of visa",
-  "main": "main.js",
+  "main": "src/main.js",
   "scripts": {
     "test": "npm test",
     "start": "node src/main.js",
@@ -14,6 +14,7 @@
     "@antiadmin/anticaptchaofficial": "^1.0.14",
     "@scrapingant/scrapingant-client": "^0.1.0",
     "cherio": "^1.0.0-rc.2",
+    "free-proxy": "^0.2.0",
     "imap": "^0.8.19",
     "imap-simple": "^5.1.0",
     "lodash": "^4.17.21",

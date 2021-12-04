@@ -6,6 +6,7 @@ function runScript(scriptPath, callback) {
     var invoked = false;
 
     var process = childProcess.fork(scriptPath);
+    telegramBot.sendMessage('App Started');
     // listen for errors as they may prevent the exit event from firing
     // execute the callback once the process has finished running
     process.on('exit', function (code) {
@@ -18,9 +19,6 @@ function runScript(scriptPath, callback) {
     });
 
 }
-
-telegramBot.sendMessage('App Started');
-
 
 // Now we can run a script and invoke a callback when complete, e.g.
 runScript('./src/index.js', function (err) {
